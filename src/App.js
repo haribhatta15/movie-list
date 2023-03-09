@@ -1,12 +1,13 @@
-import logo from "./logo.svg";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css"; // inporting bootstrap from react-bootstrap
 import { SearchForm } from "./components/SearchForm";
+import { Display } from "./components/Display";
 
 import { Button, Container, Row, Col } from "react-bootstrap";
 
 function App() {
   return (
-    <div className="wrapper bg-dark text-primary">
+    <div className="wrapper bg-dark text-danger">
       <Container>
         <Row>
           <Col>
@@ -18,6 +19,7 @@ function App() {
 
         {/* Form */}
         <SearchForm />
+        <Display />
       </Container>
     </div>
   );
