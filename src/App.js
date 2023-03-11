@@ -9,6 +9,7 @@ function App() {
   return (
     <div className="wrapper bg-dark text-danger">
       <Container>
+        {/* title */}
         <Row>
           <Col>
             <h1 className="mt-5 text-center">My Movies Collection</h1>
@@ -19,6 +20,7 @@ function App() {
 
         {/* Form */}
         <SearchForm />
+
         <Display />
       </Container>
     </div>
