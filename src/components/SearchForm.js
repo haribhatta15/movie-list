@@ -1,25 +1,29 @@
-// import React, { useRef, useState } from "react";
-// import { Alert, Button } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import { useState } from "react";
+import { useRef } from "react";
+
+import { Alert, Button } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-// import { fetchMovies } from "../helper/fetchHelper";
 import { CustomCard } from "./CustomCard";
-import { useRef } from "react";
+import { fetchMovies } from "../helper/fetchHelper";
 
 export const SearchForm = () => {
   const strRef = useRef("");
+  const [searchedMovie, setSearchMovie] = useState({});
+
+  const [error, setError] = useState("false");
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
     const str = strRef.current.value;
     // call api and get the movie details
-    fetch("http://www.omdbapi.com/?apikey=edec8d18&t=avatar")
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
-    // if we have to call from another server then we need to get through api...
+    const data = fetchMovies();
+    if (data.Response === "True") {
+      setSearchMovie(data);
+    } else {
+      setError();
+    }
   };
 
   return (
@@ -36,7 +40,11 @@ export const SearchForm = () => {
           </Col>
         </Row>
         <div className="d-flex justify-content-center mt-5">
-          <CustomCard />
+          {error ? (
+            <Alert variant="danger">Movies Not Found</Alert>
+          ) : (
+            <CustomCard />
+          )}
         </div>
       </Form>
     </div>
