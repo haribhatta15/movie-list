@@ -1,29 +1,36 @@
-import { useState } from "react";
-import { useRef } from "react";
-
+import React, { useRef, useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { CustomCard } from "./CustomCard";
 import { fetchMovies } from "../helper/fetchHelper";
+import { CustomCard } from "./CustomCard";
 
-export const SearchForm = () => {
+export const SearchForm = ({ addMovieToList }) => {
   const strRef = useRef("");
-  const [searchedMovie, setSearchMovie] = useState({});
-
+  const [searchedMovie, setSearchedMovie] = useState({});
   const [error, setError] = useState("false");
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
+
+    error && setError(false);
     const str = strRef.current.value;
+
     // call api and get the movie details
-    const data = fetchMovies();
+    const data = await fetchMovies(str);
+
     if (data.Response === "True") {
-      setSearchMovie(data);
+      setSearchedMovie(data);
     } else {
-      setError();
+      setError(true);
     }
+  };
+
+  const func = (mode) => {
+    addMovieToList({ ...searchedMovie, mode });
+    setSearchedMovie({});
+    strRef.current.value = "";
   };
 
   return (
@@ -35,15 +42,16 @@ export const SearchForm = () => {
           </Col>
           <Col>
             <div className="d-grid">
-              <Button variant="danger">Search Movies</Button>
+              <Button variant="danger" type="waarning">
+                Search Movies
+              </Button>
             </div>
           </Col>
         </Row>
         <div className="d-flex justify-content-center mt-5">
-          {error ? (
-            <Alert variant="danger">Movies Not Found</Alert>
-          ) : (
-            <CustomCard />
+          {error && <Alert variant="danger">Movies Not Found</Alert>}
+          {searchedMovie.imdbID && (
+            <CustomCard searchedMovie={searchedMovie} func={func} />
           )}
         </div>
       </Form>
