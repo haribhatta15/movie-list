@@ -2,10 +2,22 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // inporting bootstrap from react-bootstrap
 import { SearchForm } from "./components/SearchForm";
 import { Display } from "./components/Display";
-
+import { useState } from "react";
 import { Button, Container, Row, Col } from "react-bootstrap";
 
 function App() {
+  const [movieList, setMovieList] = useState([]);
+
+  const addMovieToList = (movie) => {
+    const tempArg = movieList.filter((item) => item.imdbID !== movie.imdbID);
+    setMovieList([...tempArg, movie]);
+  };
+
+  const handleOnDelete = (imdbID) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      setMovieList(movieList.filter((item) => item.imbID !== imdbID));
+    }
+  };
   return (
     <div className="wrapper bg-dark text-danger">
       <Container>
@@ -19,9 +31,9 @@ function App() {
         <hr></hr>
 
         {/* Form */}
-        <SearchForm />
+        <SearchForm addMovieToList={addMovieToList} />
 
-        <Display />
+        <Display movieList={movieList} handleOnDelete={handleOnDelete} />
       </Container>
     </div>
   );
